@@ -12,8 +12,12 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            selectedPage
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            NavigationStack {
+                selectedPage
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarBackground(.offwhite, for: .navigationBar)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             Divider()
 
@@ -94,3 +98,4 @@ private struct TabBarButton: View {
 #Preview {
     ContentView()
 }
+
