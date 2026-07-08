@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Navigation</key>
+	<dict/>
+	<key>Health</key>
+	<dict/>
+	<key>Jobs</key>
+	<dict/>
+	<key>Utilities</key>
+	<dict>
+		<key>ComEd</key>
+		<string></string>
+	</dict>
+	<key>Legal</key>
+	<dict/>
+	<key>Housing</key>
+	<dict/>
+	<key>Internet</key>
+	<dict/>
+	<key>Food</key>
+	<dict>
+		<key>WIC Food Pantry</key>
+		<string></string>
+	</dict>
+</dict>
+</plist>
