@@ -65,7 +65,7 @@ struct ChatPage: View {
                     HStack()
                     {
                         TextField("Type Here", text: $userInput)
-                            .frame(width: 300, height: 3,alignment: .center)
+                            .frame(width: 300, height: 30,alignment: .center)
                         .padding(.bottom)
                         .cornerRadius(1)
                         .background(Color.white)
