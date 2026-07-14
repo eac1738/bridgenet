@@ -22,6 +22,15 @@ struct HomePage: View {
                         .padding(.bottom, 3)
                         .padding(.leading, 30)
                     Spacer()
+                    NavigationLink {
+                        AccessibilityMenu()
+                    }
+                    label: {
+                        Image(systemName: "accessibility")
+                            .font(.system(size: 35))
+                            .padding(.trailing, 20)
+                            .foregroundStyle(.blue)
+                    }
                 }
                 HStack {
                     Text("Chicago resource navigator")
@@ -55,28 +64,29 @@ struct HomePage: View {
                     Spacer()
                 }
                 HStack {
-                    CategoryCard(iconName: "cart.fill.badge.plus", category: "Food", resources: 12)
+                    CategoryCard(iconName: "cart.fill.badge.plus", category: "Food", resources: 12, iconColor: .olivegreen)
                         .padding(3)
-                    CategoryCard(iconName: "ellipsis.circle.fill", category: "Utilities", resources: 10)
+                    CategoryCard(iconName: "ellipsis.circle.fill", category: "Utilities", resources: 10, iconColor: .brown)
                 }
                 HStack {
-                    CategoryCard(iconName: "wifi", category: "Internet", resources: 12)
+                    CategoryCard(iconName: "wifi", category: "Internet", resources: 12, iconColor: .blue)
                         .padding(3)
-                    CategoryCard(iconName: "house.fill", category: "Housing", resources: 10)
+                    CategoryCard(iconName: "house.fill", category: "Housing", resources: 10, iconColor: .bluegreen)
                 }
                 HStack {
-                    CategoryCard(iconName: "bandage.fill", category: "Health", resources: 12)
+                    CategoryCard(iconName: "bandage.fill", category: "Health", resources: 12, iconColor: .red)
                         .padding(3)
-                    CategoryCard(iconName: "map.fill", category: "Navigation", resources: 10)
+                    CategoryCard(iconName: "map.fill", category: "Navigation", resources: 10, iconColor: .bluegray)
                 }
                 HStack {
-                    CategoryCard(iconName: "bag.fill.badge.plus", category: "Jobs", resources: 12)
+                    CategoryCard(iconName: "bag.fill.badge.plus", category: "Jobs", resources: 12, iconColor: .purple)
                         .padding(3)
-                    CategoryCard(iconName: "doc.text.fill", category: "Legal", resources: 10)
+                    CategoryCard(iconName: "doc.text.fill", category: "Legal", resources: 10, iconColor: .redorange)
                 }
                 Spacer()
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
@@ -84,15 +94,22 @@ struct CategoryCard: View {
     let iconName: String
     let category: String
     var resources: Int
+    let iconColor: Color
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Image(systemName: iconName)
-
+            ZStack {
+                RoundedRectangle(cornerRadius: 5)
+                    .frame(width: 35, height: 35)
+                    .foregroundStyle(iconColor)
+                    .opacity(0.25)
+                Image(systemName: iconName)
+                    .foregroundStyle(iconColor)
+            }
             Text(category)
                 .fontWeight(.bold)
                 .font(.system(size: 20))
-                .padding(.top, 10)
+                .padding(.top, 5)
 
             Text("\(resources) resources")
                 .fontWeight(.light)
