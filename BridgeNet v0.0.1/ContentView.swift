@@ -7,13 +7,25 @@
 
 import SwiftUI
 
+enum Route: Hashable {
+    case accessibility
+}
+
 struct ContentView: View {
     @State private var selectedTab = AppTab.home
+    @State private var navPath = NavigationPath()
 
     var body: some View {
         VStack(spacing: 0) {
-            NavigationStack {
+            NavigationStack(path: $navPath) {
                 selectedPage
+                    .id(selectedTab)
+                    .navigationDestination(for: Route.self) { route in
+                        switch route {
+                        case .accessibility:
+                            AccessibilityMenu()
+                        }
+                    }
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarBackground(.offwhite, for: .navigationBar)
             }
@@ -22,10 +34,10 @@ struct ContentView: View {
             Divider()
 
             HStack {
-                TabBarButton(tab: .home, selectedTab: $selectedTab)
-                TabBarButton(tab: .chat, selectedTab: $selectedTab)
-                TabBarButton(tab: .search, selectedTab: $selectedTab)
-                TabBarButton(tab: .saved, selectedTab: $selectedTab)
+                TabBarButton(tab: .home, selectedTab: $selectedTab) { navPath = NavigationPath() }
+                TabBarButton(tab: .chat, selectedTab: $selectedTab) { navPath = NavigationPath() }
+                TabBarButton(tab: .search, selectedTab: $selectedTab) { navPath = NavigationPath() }
+                TabBarButton(tab: .saved, selectedTab: $selectedTab) { navPath = NavigationPath() }
             }
             .padding(.top, 14)
             .padding(.bottom, 2)
@@ -72,6 +84,7 @@ private enum AppTab: String, CaseIterable {
 private struct TabBarButton: View {
     let tab: AppTab
     @Binding var selectedTab: AppTab
+    var onTap: (() -> Void)? = nil
 
     private var isSelected: Bool {
         selectedTab == tab
@@ -80,6 +93,7 @@ private struct TabBarButton: View {
     var body: some View {
         Button {
             selectedTab = tab
+            onTap?()
         } label: {
             VStack(spacing: 6) {
                 Image(systemName: tab.iconName)
@@ -98,4 +112,3 @@ private struct TabBarButton: View {
 #Preview {
     ContentView()
 }
-

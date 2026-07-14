@@ -22,10 +22,7 @@ struct HomePage: View {
                         .padding(.bottom, 3)
                         .padding(.leading, 30)
                     Spacer()
-                    NavigationLink {
-                        AccessibilityMenu()
-                    }
-                    label: {
+                    NavigationLink(value: Route.accessibility) {
                         Image(systemName: "accessibility")
                             .font(.system(size: 35))
                             .padding(.trailing, 20)
