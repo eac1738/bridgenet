@@ -62,11 +62,10 @@ struct ChatPage: View {
                         
                     }
                 }
-                //Chat Area
                     HStack()
                     {
                         TextField("Type Here", text: $userInput)
-                            .frame(width: 300, height: 30,alignment: .center)
+                            .frame(width: 300, height: 3,alignment: .center)
                         .padding(.bottom)
                         .cornerRadius(1)
                         .background(Color.white)
@@ -83,16 +82,14 @@ struct ChatPage: View {
                             }
                             .disabled(userInput.trimmingCharacters(in: .whitespaces).isEmpty)}
                         }
-                
                     }
                     
                     
+                
             }
-        .background(Color.mint)
          Spacer()
         }
-
-func sendMessage()
+    func sendMessage()
 {
     //This takes the input text given and it's processed by the chatbox.
     let trimmedInput = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
