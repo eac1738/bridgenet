@@ -56,7 +56,8 @@ struct ChatPage: View {
                                         proxy.scrollTo(lastMessage.id, anchor: .bottom)
                                     }
                                 }
-                            }
+                        }
+                        
                         }
                         
                         
