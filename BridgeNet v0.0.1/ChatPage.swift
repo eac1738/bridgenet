@@ -45,19 +45,20 @@ struct ChatPage: View {
                                 }
                             }
                             .padding()
-                        }
-                        .onChange(of: messages.count)
-                        {
-                            _ in
-                            // Automatically scroll to the bottom to incoming messages
-                            if let lastMessage = messages.last
+                            .onChange(of: messages.count)
                             {
-                                withAnimation
+                                _ in
+                                // Automatically scroll to the bottom to incoming messages
+                                if let lastMessage = messages.last
                                 {
-                                    //proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                    withAnimation
+                                    {
+                                        proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                    }
                                 }
                             }
                         }
+                        
                         
                         
                     }
