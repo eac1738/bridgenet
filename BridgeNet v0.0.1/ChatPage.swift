@@ -28,6 +28,7 @@ struct ChatPage: View {
                         .padding(.top, 30)
                         .padding(.bottom, 3)
                         .padding(.leading, 30)
+                        .accessibilityAddTraits(.isHeader)
                     Spacer()
                 }
                 Divider()
@@ -73,47 +74,51 @@ struct ChatPage: View {
                         .background(Color.white)
                         .onSubmit {
                                
-                            }
-                        HStack
-                        {
-                            Button(action: sendMessage)
-                            {
-                                Image(systemName: "paperplane.fill")
-                                                        .font(.system(size: 20))
-                                                        .foregroundColor(userInput.trimmingCharacters(in: .whitespaces).isEmpty ? .gray : .blue)
-                            }
-                            .disabled(userInput.trimmingCharacters(in: .whitespaces).isEmpty)}
                         }
+                        .accessibilityLabel("Message input field")
+                        .accessibilityHint("Type your question or message for BridgeNet")
+                    HStack
+                    {
+                        Button(action: sendMessage)
+                        {
+                            Image(systemName: "paperplane.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(userInput.trimmingCharacters(in: .whitespaces).isEmpty ? .gray : .blue)
+                        }
+                        .disabled(userInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .accessibilityLabel("Send Message")
+                        .accessibilityHint("Double tap to send your message to BridgeNet")
                     }
-                    
-                    
+                }
+                
                 
             }
-         Spacer()
+            Spacer()
         }
+    }
+    
     func sendMessage()
-{
-    //This takes the input text given and it's processed by the chatbox.
-    let trimmedInput = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard !trimmedInput.isEmpty else { return }
-    
-    // 1. Append User Message
-    let userMessage = ChatMessage(text: trimmedInput, isUser: true)
-    messages.append(userMessage)
-    
-    // Clear input field immediately
-    let query = trimmedInput
-    userInput = ""
-    
-    // 2. Trigger Bot Response with a slight natural delay
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-        let replyText = ChatBotResponseSystem.getResponse(for: query)
-        let botMessage = ChatMessage(text: replyText, isUser: false)
-        messages.append(botMessage)
+    {
+        //This takes the input text given and it's processed by the chatbox.
+        let trimmedInput = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedInput.isEmpty else { return }
+        
+        // 1. Append User Message
+        let userMessage = ChatMessage(text: trimmedInput, isUser: true)
+        messages.append(userMessage)
+        
+        // Clear input field immediately
+        let query = trimmedInput
+        userInput = ""
+        
+        // 2. Trigger Bot Response with a slight natural delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            let replyText = ChatBotResponseSystem.getResponse(for: query)
+            let botMessage = ChatMessage(text: replyText, isUser: false)
+            messages.append(botMessage)
+        }
     }
 }
-}
-    
 
 struct ChatMessage: Identifiable
 {
@@ -127,46 +132,48 @@ struct ChatBotResponseSystem
 {
     //This allows the AI Chatbot to respond to user input.
     private static let responses: [String: String] = [
-            "hello": "Hi there! How can I help you today?",
-            "hi": "Hey! Hope you're having a great day.",
-            "help": "I can assist you with basic navigation. Try saying 'hello' or 'bye'.",
-            "bye": "Goodbye! Have a wonderful day!",
-            "status": "All systems are operational."
-        ]
+        "hello": "Hi there! How can I help you today?",
+        "hi": "Hey! Hope you're having a great day.",
+        "help": "I can assist you with basic navigation. Try saying 'hello' or 'bye'.",
+        "bye": "Goodbye! Have a wonderful day!",
+        "status": "All systems are operational."
+    ]
+    
+    static func getResponse(for input: String) -> String {
+        let cleanedInput = input.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
-        static func getResponse(for input: String) -> String {
-            let cleanedInput = input.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            // Check for direct match or partial match
-            if let directMatch = responses[cleanedInput] {
-                return directMatch
-            }
-            
-            // Fallback for unrecognized inputs
-            return "I'm not sure I understand that. Type 'help' to see what I can do."
+        // Check for direct match or partial match
+        if let directMatch = responses[cleanedInput] {
+            return directMatch
         }
+        
+        // Fallback for unrecognized inputs
+        return "I'm not sure I understand that. Type 'help' to see what I can do."
+    }
 }
 
 struct ChatDialogBox : View
 {
     let message: ChatMessage
         
-        var body: some View {
-            HStack {
-                if message.isUser { Spacer() }
-                
-                Text(message.text)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(message.isUser ? Color.blue : Color(.secondarySystemBackground))
-                    .foregroundColor(message.isUser ? .white : .primary)
-                    .cornerRadius(18)
-                    // Prevents layout stretching across the screen
-                    .frame(maxWidth: UIScreen.main.bounds.width * 0.75, alignment: message.isUser ? .trailing : .leading)
-                
-                if !message.isUser { Spacer() }
-            }
+    var body: some View {
+        HStack {
+            if message.isUser { Spacer() }
+            
+            Text(message.text)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(message.isUser ? Color.blue : Color(.secondarySystemBackground))
+                .foregroundColor(message.isUser ? .white : .primary)
+                .cornerRadius(18)
+                // Prevents layout stretching across the screen
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.75, alignment: message.isUser ? .trailing : .leading)
+            
+            if !message.isUser { Spacer() }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(message.isUser ? "Your message: \(message.text)" : "BridgeNet says: \(message.text)")
+    }
 }
 
 

@@ -10,9 +10,22 @@
 		E529202B2FF6C73D0002ACC7 /* BridgeNet v0.0.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BridgeNet v0.0.1.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		E56AD4C6300848DD00C47CF9 /* Exceptions for "BridgeNet v0.0.1" folder in "Compile Sources" phase from "BridgeNet v0.0.1" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = E52920272FF6C73D0002ACC7 /* Sources */;
+			membershipExceptions = (
+				chicago_zips.json,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E529202D2FF6C73D0002ACC7 /* BridgeNet v0.0.1 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E56AD4C6300848DD00C47CF9 /* Exceptions for "BridgeNet v0.0.1" folder in "Compile Sources" phase from "BridgeNet v0.0.1" target */,
+			);
 			path = "BridgeNet v0.0.1";
 			sourceTree = "<group>";
 		};

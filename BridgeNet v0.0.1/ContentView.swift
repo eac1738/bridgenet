@@ -104,6 +104,8 @@ private struct TabBarButton: View {
             }
             .frame(maxWidth: .infinity)
             .foregroundStyle(isSelected ? .bluegreen : .darkgray)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("\(tab.rawValue) Tab")
         }
         .buttonStyle(.plain)
     }
