@@ -46,27 +46,29 @@ struct ChatPage: View {
                                 }
                             }
                             .padding()
-                        }
-                        .onChange(of: messages.count)
-                        {
-                            _ in
-                            // Automatically scroll to the bottom to incoming messages
-                            if let lastMessage = messages.last
+                            .onChange(of: messages.count)
                             {
-                                withAnimation
+                                _ in
+                                // Automatically scroll to the bottom to incoming messages
+                                if let lastMessage = messages.last
                                 {
-                                    //proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                    withAnimation
+                                    {
+                                        proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                    }
                                 }
-                            }
                         }
+                        
+                        }
+                        
                         
                         
                     }
                 }
-                HStack()
-                {
-                    TextField("Type Here", text: $userInput)
-                        .frame(width: 300, height: 3,alignment: .center)
+                    HStack()
+                    {
+                        TextField("Type Here", text: $userInput)
+                            .frame(width: 300, height: 30,alignment: .center)
                         .padding(.bottom)
                         .cornerRadius(1)
                         .background(Color.white)
