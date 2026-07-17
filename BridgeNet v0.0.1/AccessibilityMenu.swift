@@ -8,14 +8,12 @@
 import SwiftUI
 
 enum AccessibilityRoute: Hashable {
-    case voiceOver
     case contrastMode
 }
 
 struct AccessibilityMenu: View {
 
     @AppStorage("spanishMode") private var SpanishMode = false
-    @AppStorage("voiceOverEnabled") private var VoiceOver = false
     @AppStorage("contrastEnabled") private var ContrastMode = false
 
     var body: some View {
@@ -27,36 +25,21 @@ struct AccessibilityMenu: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.darkgray)
                         .padding()
+                        .accessibilityAddTraits(.isHeader)
                     Spacer()
                 }
 
                 // Group: Vision options
                 VStack(spacing: 0) {
-                    // Row: VoiceOver
-                    NavigationLink(value: AccessibilityRoute.voiceOver) {
-                        HStack {
-                            Text("VoiceOver")
-                                .font(.system(size: 17))
-                                .foregroundStyle(.darkgray)
-                                .padding(.leading, 20)
-                            Spacer()
-                            if (!VoiceOver) {
-                                Text("Off >")
-                                    .font(.system(size: 17))
-                                    .foregroundStyle(.darkgray)
-                                    .padding(.trailing, 20)
-                                    .padding(.vertical, 12)
-                            }
-                            else {
-                                Text("On >")
-                                    .font(.system(size: 17))
-                                    .foregroundStyle(.darkgray)
-                                    .padding(.trailing, 20)
-                                    .padding(.vertical, 12)
-                            }
-                        }
+                    HStack {
+                        Text("BridgeNet includes VoiceOver support!")
+                            .padding(.bottom)
+                            .padding(.leading)
+                            .fontWeight(.light)
+                            .opacity(0.65)
+                        Spacer()
                     }
-                    // Single inset divider BETWEEN rows
+                    .accessibilityLabel("BridgeNet includes VoiceOver support!")
                     Divider()
                     // Row: Contrast Mode
                     NavigationLink(value: AccessibilityRoute.contrastMode) {
@@ -72,6 +55,7 @@ struct AccessibilityMenu: View {
                                     .foregroundStyle(.darkgray)
                                     .padding(.trailing, 20)
                                     .padding(.vertical, 12)
+                                    .accessibilityHidden(true)
                             }
                             else {
                                 Text("On >")
@@ -79,12 +63,14 @@ struct AccessibilityMenu: View {
                                     .foregroundStyle(.darkgray)
                                     .padding(.trailing, 20)
                                     .padding(.vertical, 12)
+                                    .accessibilityHidden(true)
                             }
                         }
                     }
+                    .accessibilityLabel("Contrast Mode settings")
+                    .accessibilityValue(ContrastMode ? "On" : "Off")
                 }
                 // Full-width separators at group edges
-                .overlay(alignment: .top) { Divider() }
                 .overlay(alignment: .bottom) { Divider() }
 
                 HStack {
@@ -93,6 +79,7 @@ struct AccessibilityMenu: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.darkgray)
                         .padding()
+                        .accessibilityAddTraits(.isHeader)
                     Spacer()
                 }
 
@@ -116,6 +103,8 @@ struct AccessibilityMenu: View {
                         .padding(.trailing, 20)
                         .padding(.vertical, 12)
                     }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("English language toggle")
                     // Single inset divider BETWEEN rows
                     Divider()
                     // Row: Spanish (on when SpanishMode is true)
@@ -135,6 +124,8 @@ struct AccessibilityMenu: View {
                         .padding(.trailing, 20)
                         .padding(.vertical, 12)
                     }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Spanish language toggle")
                 }
                 // Full-width separators at group edges
                 .overlay(alignment: .top) { Divider() }
@@ -143,8 +134,6 @@ struct AccessibilityMenu: View {
         }
         .navigationDestination(for: AccessibilityRoute.self) { route in
             switch route {
-            case .voiceOver:
-                VoiceOverPage(VoiceOver: $VoiceOver)
             case .contrastMode:
                 ContrastModePage(ContrastMode: $ContrastMode)
             }
@@ -163,3 +152,4 @@ struct AccessibilityMenu: View {
         AccessibilityMenu()
     }
 }
+
