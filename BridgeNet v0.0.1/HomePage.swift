@@ -79,8 +79,11 @@ struct HomePage: View {
                     CategoryCard(iconName: "ellipsis.circle.fill", category: "Utilities", resources: 10, iconColor: .brown)
                 }
                 HStack {
-                    CategoryCard(iconName: "wifi", category: "Internet", resources: 12, iconColor: .blue)
-                        .padding(3)
+                    NavigationLink(destination: InternetResourceFinderView()) {
+                        CategoryCard(iconName: "wifi", category: "Internet", resources: 12, iconColor: .blue)
+                    }
+                    .padding(3)
+                    .buttonStyle(.plain) // Prevents SwiftUI from turning your entire custom card blue
                     NavigationLink(destination: AffordableHousingFinderView()) {
                         CategoryCard(iconName: "house.fill", category: "Housing", resources: 10, iconColor: .bluegreen)
                     }
@@ -296,6 +299,129 @@ struct AffordableHousingFinderView: View {
             }
         }
         .navigationTitle("Housing Navigator")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+
+// 6. A clean secondary screen that encapsulates the offline internet resource search UI
+struct InternetResourceFinderView: View {
+    @State private var inputZip: String = ""
+    @State private var nearbyResources: [(resource: InternetResource, milesAway: Double)] = []
+    @State private var errorMessage: String? = nil
+    @State private var hasSearched = false
+
+    // Helper function to load your bundled chicago_zips.json file completely offline
+    private func loadZipDatabase() -> [ZipCoordinate] {
+        guard let url = Bundle.main.url(forResource: "chicago_zips", withExtension: "json") else {
+            InternetResourceManager.lastLoadError = "chicago_zips.json is not in the app bundle. Select it in Xcode's Project Navigator, open the File Inspector, and make sure your app target is checked under Target Membership."
+            print("Could not find chicago_zips.json in the app bundle.")
+            return []
+        }
+        guard let data = try? Data(contentsOf: url) else {
+            InternetResourceManager.lastLoadError = "chicago_zips.json was found but couldn't be read."
+            return []
+        }
+        guard let decoded = try? JSONDecoder().decode([ZipCoordinate].self, from: data) else {
+            InternetResourceManager.lastLoadError = "chicago_zips.json was found but failed to decode — check that its JSON is well-formed."
+            return []
+        }
+        return decoded
+    }
+
+    var body: some View {
+        VStack {
+            Text("Find Internet Resources Nearby")
+                .font(.title2)
+                .bold()
+                .padding(.top)
+
+            TextField("Enter 5-Digit Chicago ZIP Code", text: $inputZip)
+                .textFieldStyle(.roundedBorder)
+                .keyboardType(.numberPad)
+                .padding()
+                .accessibilityLabel("Enter 5-Digit Chicago ZIP Code")
+
+            Button("Calculate Closest Options") {
+                // Load the complete JSON file of Chicago coordinates
+                let completeZipDB = loadZipDatabase()
+
+                // Execute the mileage calculation against the indexed resources
+                nearbyResources = InternetResourceManager.findResourcesNear(userZip: inputZip, zipDatabase: completeZipDB)
+                errorMessage = InternetResourceManager.lastLoadError
+                hasSearched = true
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.blue)
+            .accessibilityLabel("Calculate Closest Options")
+            .accessibilityHint("Finds the closest options for your ZIP code")
+
+            if let errorMessage {
+                Text(errorMessage)
+                    .font(.footnote)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            } else if hasSearched && nearbyResources.isEmpty {
+                Text("No results. Double-check the ZIP code and try again.")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+            }
+
+            List(nearbyResources, id: \.resource.id) { item in
+                let featureSummary = [
+                    item.resource.hasWifi ? "Wi-Fi available" : nil,
+                    item.resource.hasInternet ? "Public internet access" : nil,
+                    item.resource.hasTraining ? "Digital skills training offered" : nil
+                ].compactMap { $0 }.joined(separator: ", ")
+
+                let accessibilitySummary = "\(item.resource.facility), \(item.resource.type), \(item.resource.address), \(item.resource.phone.isEmpty ? "" : item.resource.phone + ", ")\(featureSummary.isEmpty ? "" : featureSummary + ", ")\(String(format: "%.1f", item.milesAway)) miles away"
+
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(item.resource.facility)
+                            .font(.headline)
+                        Text(item.resource.type)
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                        Text(item.resource.address)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        if !item.resource.hours.isEmpty {
+                            Text(item.resource.hours)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        HStack(spacing: 10) {
+                            if item.resource.hasWifi {
+                                Label("Wi-Fi", systemImage: "wifi")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                            }
+                            if item.resource.hasTraining {
+                                Label("Training", systemImage: "person.fill.checkmark")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .accessibilityHidden(true) // Already folded into accessibilitySummary below
+                        if !item.resource.phone.isEmpty {
+                            Text(item.resource.phone)
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    Spacer()
+                    Text(String(format: "%.1f mi", item.milesAway))
+                        .bold()
+                        .foregroundColor(.blue)
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(accessibilitySummary)
+            }
+        }
+        .navigationTitle("Internet Navigator")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
