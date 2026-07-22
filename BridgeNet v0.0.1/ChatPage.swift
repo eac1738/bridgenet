@@ -140,7 +140,7 @@ struct ChatPage: View {
                    let prediction = try? model.prediction(text: query) {
                     self.chatState = .zipcodeSearch(intent: prediction.label)
                 }
-            case .awaitingZipCode(let intent):
+            case .zipcodeSearch(let intent):
                 if self.validChicagoZips.contains(query) {
                     self.messages.append(
                         ChatMessage(text: "Great! Let me take you to the \(intent) resources near \(query).", isUser: false)
@@ -148,7 +148,7 @@ struct ChatPage: View {
                     // Navigate after a brief delay so user sees the message
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         self.onNavigate?(intent, query)
-                        self.conversationState = .idle
+                        self.chatState = .idle
                     }
                 } else {
                     self.messages.append(
