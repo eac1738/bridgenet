@@ -92,7 +92,7 @@ class PantryManager {
     }
     
     // 3. Main search and distance logic mapping your ZIP reference index
-    static func findPantriesNear(userZip: String, zipDatabase: [ZipCoordinate]) -> [(pantry: Pantry, milesAway: Double)] {
+    static func findPantriesNear(userZip: String, zipDatabase: [ZipCoordinate], maxDistance: Double? = nil) -> [(pantry: Pantry, milesAway: Double)] {
         let allPantries = loadPantriesFromCSV()
         let trimmedZip = userZip.trimmingCharacters(in: .whitespacesAndNewlines)
 
@@ -119,7 +119,14 @@ class PantryManager {
         }
         
         // Sort from closest mileage outward
-        return matches.sorted { $0.1 < $1.1 }
+        // This is also going help if there isn't a resource in that area, approximate based on what's closests
+        let sorted = matches.sorted { $0.1 < $1.1 }
+        if let maxDistance = maxDistance
+        {
+            return sorted.filter{$0.1 <= maxDistance}
+        }
+        return sorted
+        
     }
     
     // Simple helper parser to handle standard comma-separated data chunks smoothly

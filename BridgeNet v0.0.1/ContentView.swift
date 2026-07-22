@@ -18,6 +18,7 @@ struct ContentView: View {
     @StateObject private var savedStore = SavedItemsStore()
     @State private var selectedTab = AppTab.home
     @State private var navPath = NavigationPath()
+    @State private var searchInitalQuery : String = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -65,13 +66,20 @@ struct ContentView: View {
     private func handleChatNavigation(intent: String, zipCode: String) {
         switch intent {
         case "Food":
-            navPath.append(Route.foodFinder(zip: zipCode))
+            searchInitalQuery = zipCode
+            navPath = NavigationPath()
+            selectedTab = .search
         case "Housing", "Shelter":
             // No separate shelter finder exists yet — CitywideHousingResources
             // already covers emergency shelter, so route there for now.
-            navPath.append(Route.housingFinder(zip: zipCode))
+            //navPath.append(Route.housingFinder(zip: zipCode))
+            searchInitalQuery = zipCode
+            navPath = NavigationPath()
+            selectedTab = .search
         case "Internet":
-            navPath.append(Route.internetFinder(zip: zipCode))
+            searchInitalQuery = zipCode
+            navPath = NavigationPath()
+            selectedTab = .search
         default:
             // Legal and Employment don't have a finder view built yet —
             // send the person to Search rather than a dead end.
@@ -88,7 +96,7 @@ struct ContentView: View {
         case .chat:
             ChatPage(onNavigate: handleChatNavigation)
         case .search:
-            SearchPage()
+            SearchPage(initialSearch: searchInitalQuery)
         case .saved:
             SavedPage()
         }

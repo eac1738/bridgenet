@@ -140,7 +140,7 @@ struct FoodPantryFinderView: View {
 
     private func performSearch() {
         let completeZipDB = loadZipDatabase()
-        nearbyPantries = PantryManager.findPantriesNear(userZip: inputZip, zipDatabase: completeZipDB)
+        nearbyPantries = PantryManager.findPantriesNear(userZip: inputZip, zipDatabase: completeZipDB, maxDistance: 5.0)
         errorMessage = PantryManager.lastLoadError
         hasSearched = true
     }
@@ -205,7 +205,7 @@ struct FoodPantryFinderView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 } else if hasSearched && nearbyPantries.isEmpty {
-                    Text("No results. Double-check the ZIP code and try again.")
+                    Text("No results within 5 mile radius. Double-check the ZIP code and try again.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
@@ -285,7 +285,7 @@ struct AffordableHousingFinderView: View {
 
     private func performSearch() {
         let completeZipDB = loadZipDatabase()
-        nearbyListings = HousingManager.findHousingNear(userZip: inputZip, zipDatabase: completeZipDB)
+        nearbyListings = HousingManager.findHousingNear(userZip: inputZip, zipDatabase: completeZipDB,maxDistance: 5.0)
         errorMessage = HousingManager.lastLoadError
         hasSearched = true
     }
@@ -350,7 +350,7 @@ struct AffordableHousingFinderView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 } else if hasSearched && nearbyListings.isEmpty {
-                    Text("No results. Double-check the ZIP code and try again.")
+                    Text("No results within a 5 mile radius. Double-check the ZIP code and try again.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .padding(.horizontal)

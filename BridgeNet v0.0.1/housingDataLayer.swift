@@ -93,7 +93,7 @@ class HousingManager {
     }
 
     // Main search and distance logic mapping your ZIP reference index
-    static func findHousingNear(userZip: String, zipDatabase: [ZipCoordinate]) -> [(listing: HousingListing, milesAway: Double)] {
+    static func findHousingNear(userZip: String, zipDatabase: [ZipCoordinate], maxDistance: Double? = nil) -> [(listing: HousingListing, milesAway: Double)] {
         let allListings = loadListingsFromCSV()
         let trimmedZip = userZip.trimmingCharacters(in: .whitespacesAndNewlines)
 
@@ -120,7 +120,12 @@ class HousingManager {
         }
 
         // Sort from closest mileage outward
-        return matches.sorted { $0.1 < $1.1 }
+        let sorted = matches.sorted { $0.1 < $1.1 }
+        if let maxDistance = maxDistance
+        {
+            return sorted.filter{$0.1 <= maxDistance}
+        }
+        return sorted
     }
 
     // Simple helper parser to handle standard comma-separated data chunks smoothly

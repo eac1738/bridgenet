@@ -15,6 +15,15 @@ struct SearchPage: View {
     @State private var hasLoaded = false
     @State private var selectedResource: SavedResource? = nil
 
+    let initialSearch: String
+    
+    //This will be either filled in with user input or prefilled via the ChatBot when asked.
+    init(initialSearch: String = "")
+    {
+        self.initialSearch = initialSearch
+        _searchText = State(initialValue: initialSearch)
+    }
+    
     private var trimmedQuery: String {
         searchText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
