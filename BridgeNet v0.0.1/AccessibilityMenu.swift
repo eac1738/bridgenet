@@ -37,10 +37,13 @@ struct AccessibilityMenu: View {
                             .padding(.leading)
                             .fontWeight(.light)
                             .opacity(0.65)
+                            .accessibilityLabel("BridgeNet includes VoiceOver support!")
                         Spacer()
                     }
-                    .accessibilityLabel("BridgeNet includes VoiceOver support!")
+                    .accessibilityElement(children: .ignore)
+
                     Divider()
+                        .accessibilityHidden(true)
                     // Row: Contrast Mode
                     NavigationLink(value: AccessibilityRoute.contrastMode) {
                         HStack {
@@ -69,9 +72,10 @@ struct AccessibilityMenu: View {
                     }
                     .accessibilityLabel("Contrast Mode settings")
                     .accessibilityValue(ContrastMode ? "On" : "Off")
+                    .accessibilityHint("Double tap to adjust contrast settings")
                 }
                 // Full-width separators at group edges
-                .overlay(alignment: .bottom) { Divider() }
+                .overlay(alignment: .bottom) { Divider().accessibilityHidden(true) }
 
                 HStack {
                     Text("LANGUAGE")
@@ -105,8 +109,10 @@ struct AccessibilityMenu: View {
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("English language toggle")
+                    .accessibilityValue(SpanishMode ? "Off" : "On")
                     // Single inset divider BETWEEN rows
                     Divider()
+                        .accessibilityHidden(true)
                     // Row: Spanish (on when SpanishMode is true)
                     HStack {
                         Text("Spanish")
@@ -126,10 +132,11 @@ struct AccessibilityMenu: View {
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("Spanish language toggle")
+                    .accessibilityValue(SpanishMode ? "On" : "Off")
                 }
                 // Full-width separators at group edges
-                .overlay(alignment: .top) { Divider() }
-                .overlay(alignment: .bottom) { Divider() }
+                .overlay(alignment: .top) { Divider().accessibilityHidden(true) }
+                .overlay(alignment: .bottom) { Divider().accessibilityHidden(true) }
             }
         }
         .navigationDestination(for: AccessibilityRoute.self) { route in
@@ -152,4 +159,3 @@ struct AccessibilityMenu: View {
         AccessibilityMenu()
     }
 }
-
