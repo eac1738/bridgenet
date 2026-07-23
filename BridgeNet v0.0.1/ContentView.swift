@@ -76,8 +76,9 @@ struct ContentView: View {
             searchInitalQuery = zipCode
             navPath = NavigationPath()
             selectedTab = .search
+        //Since there is currently no internet related zipcodes, it would just input "internet as a search query."
         case "Internet":
-            searchInitalQuery = zipCode
+            searchInitalQuery = "internet"
             navPath = NavigationPath()
             selectedTab = .search
         default:
