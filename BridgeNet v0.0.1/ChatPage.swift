@@ -183,13 +183,15 @@ struct ChatBotResponseSystem
         case "Shelter":
             return "Are you looking for emergency shelter? Let me find resources for you.\nWhat's your Chicago zip code so I can find shelter resources near you?"
         case "Housing":
-            return "For health-related needs, I can find nearby clinics and healthcare programs.\nWhat's your Chicago zip code so I can find housing resources near you?"
+            return "Looking for affordable housing? Let me find housing options for you.\nWhat's your Chicago zip code so I can find housing resources near you?"
         case "Internet":
             return "Looking for low-cost or free internet access? Let me find internet resources for you.\nWhat's your Chicago zip code so I can find internet resources near you?"
         case "Legal":
             return "If you need legal assistance, I can connect you with resources.\nWhat's your Chicago zip code so I can find legal resources near you?"
         case "Employment":
             return "Looking for employment support? I can help find job training programs.\nWhat's your Chicago zip code so I can find employment resources near you?"
+        case "Live":
+            return "Looking for immediate housing? Let me find resources for you.\nWhat's your Chicago zip code so I can find housing resources near you?"
         default:
             return "I'm not sure I understand. Could you tell me more about what you need?"
         }

@@ -18,7 +18,6 @@ struct ContentView: View {
     @StateObject private var savedStore = SavedItemsStore()
     @State private var selectedTab = AppTab.home
     @State private var navPath = NavigationPath()
-    @State private var searchInitalQuery : String = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -63,24 +62,21 @@ struct ContentView: View {
 
     // Routes a detected Chat intent + confirmed zip code to the matching
     // finder view, pushed onto whichever tab's NavigationStack is current.
+    // Each finder view auto-runs its search on appear when handed a zip this
+    // way (see initialZip in HomePage.swift), so this is what actually shows
+    // results — routing through Search instead doesn't work, since none of
+    // the CSV-backed resources store their zip code inside the searchable
+    // address text.
     private func handleChatNavigation(intent: String, zipCode: String) {
         switch intent {
         case "Food":
-            searchInitalQuery = zipCode
-            navPath = NavigationPath()
-            selectedTab = .search
+            navPath.append(Route.foodFinder(zip: zipCode))
         case "Housing", "Shelter":
             // No separate shelter finder exists yet — CitywideHousingResources
             // already covers emergency shelter, so route there for now.
-            //navPath.append(Route.housingFinder(zip: zipCode))
-            searchInitalQuery = zipCode
-            navPath = NavigationPath()
-            selectedTab = .search
-        //Since there is currently no internet related zipcodes, it would just input "internet as a search query."
+            navPath.append(Route.housingFinder(zip: zipCode))
         case "Internet":
-            searchInitalQuery = "internet"
-            navPath = NavigationPath()
-            selectedTab = .search
+            navPath.append(Route.internetFinder(zip: zipCode))
         default:
             // Legal and Employment don't have a finder view built yet —
             // send the person to Search rather than a dead end.
@@ -97,7 +93,7 @@ struct ContentView: View {
         case .chat:
             ChatPage(onNavigate: handleChatNavigation)
         case .search:
-            SearchPage(initialSearch: searchInitalQuery)
+            SearchPage()
         case .saved:
             SavedPage()
         }
